@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const {
     MONGO_USERNAME,
     MONGO_PASSWORD,
@@ -9,8 +11,6 @@ const {
 
 const options = {
     useNewUrlParser: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 500,
     connectTimeoutMS: 10000,
 };
   

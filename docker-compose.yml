@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: nodejs
+    image: node:16-alpine
     restart: unless-stopped
     env_file: .env
     environment:
