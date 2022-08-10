@@ -18,9 +18,36 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}",
+					"raw": "{{url}}/greeting",
 					"host": [
 						"{{url}}"
+					],
+					"path": [
+						"greeting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Greetings",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/greeting/all",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"greeting",
+						"all"
 					]
 				}
 			},
@@ -63,7 +90,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"text\": \"Good Morning, Afternoon, or Evening!\"\r\n}",
+					"raw": "{\r\n    \"text\": \"Guten tag!\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -78,6 +105,58 @@
 					"path": [
 						"greeting",
 						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Greeting",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Bonjour et bieveneue!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/greeting/62f3c8c25ad21defd04dae48",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"greeting",
+						"62f3c8c25ad21defd04dae48"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Greeting",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/greeting/62f3c75ace233247d25975af",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"greeting",
+						"62f3c75ace233247d25975af"
 					]
 				}
 			},

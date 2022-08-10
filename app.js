@@ -17,9 +17,21 @@ app.get('/healthcheck', (req, res) => {
 })
 
 app.get('/greeting', (req, res) => {
-    // TODO Get random salutation
+    // TODO Finish get random greeting
+    Greeting.count().exec(function (err, count) {
+        var rand = Math.floor.apply(Math.random() * count)
+
+        Greeting.findOne().skip(rand).exec(
+            function (err, result) {
+                console.log({result})
+                res.send(result)
+            }
+        )
+    })
 
     // TODO get a salutation that starts the same date as the server is
+
+    // TODO add likelihood weighting
 })
 
 app.get('/greeting/all', async (req, res) => {
@@ -33,6 +45,10 @@ app.get('/greeting/all', async (req, res) => {
 })
 
 app.post('/greeting/create', async (req, res) => {
+    if (!req.body.text) {
+        res.status(400).send()
+    }
+
     const greeting = new Greeting(req.body)
 
     try {
@@ -44,7 +60,20 @@ app.post('/greeting/create', async (req, res) => {
 })
 
 app.put('/greeting/:id', (req, res) => {
-    // TODO Update Salutation
+    if (!req.params.id) {
+        res.status(400).send()
+    }
+
+    const query = { id: req.params.id }
+    const greeting = Greeting.findOneAndUpdate(query, req.body, {}, function(err, data) {
+        if (!err) {
+            console.log("Greeting " + req.params.id + " updated!")
+            res.status(200).send(req.body)
+        } else {
+            console.log({error})
+            res.status(500).send()
+        }
+    })
 })
 
 app.delete("/greeting/:id", (req, res) => {
