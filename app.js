@@ -1,15 +1,19 @@
 const express = require('express')
-const app = express();
+const app = express()
 const router = express.Router()
 const database = require('./database')
 const Greeting = require('./models/greeting')
+const cors = require('cors')
 
 const port = 8080
 
-app.use(express.json());
+app.use(express.json())
+app.use(cors({
+    origin: '*'
+}))
 
 app.get('/', (req, res) => {
-    res.json({'greeting': 'Hello Olleh!'})
+    res.json({'greeting': 'Hello!'})
 })
 
 app.get('/healthcheck', (req, res) => {
