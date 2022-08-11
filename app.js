@@ -1,3 +1,9 @@
+// import endOfDay from 'date-fns/endOfDay'
+// import startOfDay from 'date-fns/startOfDay'
+
+// const endOfDay = require('date-fns/endOfDay')
+// const startOfDay = require('date-fns/startOfDay')
+const datefns = require('date-fns')
 const express = require('express')
 const cors = require('cors')
 const router = express.Router()
@@ -21,7 +27,7 @@ app.get('/healthcheck', (req, res) => {
 app.get('/greeting', (req, res) => {
     const time = new Date();
 
-    Greeting.count().exec(function (err, count) {
+    /* Greeting.count().exec(function (err, count) {
         console.log({count})
         var rand = Math.floor(Math.random() * count)
 
@@ -31,11 +37,51 @@ app.get('/greeting', (req, res) => {
                 res.send(result)
             }
         )
-    })
+    }) */
 
     // TODO get a salutation that starts the same date as the server is
+    Greeting.count().exec(function (err, count) {
+        var rand = Math.floor(Math.random() * count)
+        var startTime = datefns.startOfDay(time);
+        var endTime = datefns.endOfDay(time)
 
-    // TODO add likelihood weighting
+        var todays_records_count = Greeting.findOne({
+            start_date: startTime,
+            end_date: endTime,
+        }).count()
+
+        if (todays_records_count > 0) {
+            Greeting.findOne({
+                start_date: startTime,
+                end_date: endTime,
+            }).skip(rand).exec(
+                function (err, result) {
+                    console.log("Random, locked to date")
+                    console.log({result, rand, startTime, endTime})
+                    res.send(result)
+                }
+            )
+        } else {
+            Greeting.findOne({
+                start_date: null,
+                end_date: null
+            }).skip(rand).exec(
+                function (err, result) {
+                    console.log("Random, not locked to date")
+                    console.log({result, rand, startTime, endTime})
+                    res.send(result)
+                } 
+            )
+        }
+        /* .skip(rand).exec(
+            function (err, result) {
+                console.log({result, rand, startTime, endTime})
+                res.send(result)
+            }
+        ) */
+    })
+
+    // TODO add likelihood weighting (optional)
 })
 
 app.get('/greeting/all', async (req, res) => {

@@ -18,9 +18,6 @@ const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${M
 
 mongoose.connect(url, options).then( function() {
     console.log('MongoDB is connected');
-
-    // TODO Create Schema
-
 })
     .catch( function(err) {
     console.log(err);
