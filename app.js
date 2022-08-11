@@ -75,19 +75,16 @@ app.get('/greeting', (req, res) => {
 
         if (datefns.isAfter(time, new Date().setHours(0,0,0,0))
             && datefns.isBefore(time, new Date().setHours(11, 59, 59, 999))) {
-            console.log("Time is Morning")
             morning = true
         }
 
         if (datefns.isAfter(time, new Date().setHours(12, 0, 0, 0))
             && datefns.isBefore(time, new Date().setHours(18, 59, 59, 999))) {
-            console.log("Time is afternoon")
             afternoon = true
         }
 
         if (datefns.isAfter(time, new Date().setHours(19, 0, 0, 0))
             && datefns.isBefore(time, new Date().setHours(23, 59, 59, 999))) {
-            console.log("Time is evening")
             evening = true
         }
 
@@ -97,8 +94,6 @@ app.get('/greeting', (req, res) => {
                 end_date: endTime,
             }).skip(rand).exec(
                 function (err, result) {
-                    console.log("Random, locked to date")
-                    console.log({result, rand, startTime, endTime})
                     res.send(result)
                 }
             )
@@ -109,8 +104,6 @@ app.get('/greeting', (req, res) => {
                 clamp_to_morning: true
             }).skip(randVal).exec(
                 function (err, result) {
-                    console.log("Random, clamped to morning only")
-                    console.log({result, rand, randVal, startTime, endTime, records_for_morning})
                     res.send(result)
                 } 
             )
@@ -119,8 +112,6 @@ app.get('/greeting', (req, res) => {
                 clamp_to_afternoon: true
             }).skip(rand).exec(
                 function (err, result) {
-                    console.log("Random, clamped to afternoon only")
-                    console.log({result, rand, startTime, endTime})
                     res.send(result)
                 } 
             )
@@ -129,8 +120,6 @@ app.get('/greeting', (req, res) => {
                 clamp_to_evening: true
             }).skip(rand).exec(
                 function (err, result) {
-                    console.log("Random, clamped to afternoon only")
-                    console.log({result, rand, startTime, endTime})
                     res.send(result)
                 } 
             )
@@ -140,8 +129,6 @@ app.get('/greeting', (req, res) => {
                 end_date: null
             }).skip(rand).exec(
                 function (err, result) {
-                    console.log("Random, not locked to date")
-                    console.log({result, rand, startTime, endTime})
                     res.send(result)
                 } 
             )
