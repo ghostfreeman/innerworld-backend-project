@@ -26,6 +26,43 @@ app.get('/healthcheck', (req, res) => {
 
 app.get('/greeting', (req, res) => {
     const time = new Date();
+    var records_for_morning = 0;
+    var records_for_afternoon = 0;
+    var records_for_evening = 0;
+    var todays_records_count = 0;
+
+    var todays_records_count = Greeting.find({
+        start_date: startTime,
+        end_date: endTime,
+    })
+    .count()
+    .then(count => {
+        todays_records_count = count
+    })
+
+    var records_for_morning = Greeting.find({
+        clamp_to_morning: true
+    })
+    .count()
+    .then(count => {
+        records_for_morning = count
+    })
+
+    var records_for_afternoon = Greeting.find({
+        clamp_to_afternoon: true
+    })
+    .count()
+    .then(count => {
+        records_for_afternoon = count
+    })
+
+    var records_for_evening = Greeting.find({
+        clamp_to_evening: true
+    })
+    .count()
+    .then(count => {
+        records_for_evening = count
+    })
 
     Greeting.count().exec(function (err, count) {
         const rand = Math.floor(Math.random() * count)
@@ -35,22 +72,6 @@ app.get('/greeting', (req, res) => {
         var afternoon = false
         var evening = false
 
-        var todays_records_count = Greeting.find({
-            start_date: startTime,
-            end_date: endTime,
-        }).count()
-
-        var records_for_morning = Greeting.find({
-            clamp_to_morning: true
-        }).count()
-
-        var records_for_afternoon = Greeting.find({
-            clamp_to_afternoon: true
-        }).count()
-
-        var records_for_evening = Greeting.find({
-            clamp_to_evening: true
-        })
 
         if (datefns.isAfter(time, new Date().setHours(0,0,0,0))
             && datefns.isBefore(time, new Date().setHours(11, 59, 59, 999))) {
@@ -82,12 +103,14 @@ app.get('/greeting', (req, res) => {
                 }
             )
         } else if (morning && records_for_morning) {
+            const randVal = Math.floor(Math.random() * records_for_morning);
+
             Greeting.findOne({
                 clamp_to_morning: true
-            }).skip(rand).exec(
+            }).skip(randVal).exec(
                 function (err, result) {
                     console.log("Random, clamped to morning only")
-                    console.log({result, rand, startTime, endTime})
+                    console.log({result, rand, randVal, startTime, endTime, records_for_morning})
                     res.send(result)
                 } 
             )
