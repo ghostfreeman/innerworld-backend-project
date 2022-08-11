@@ -27,28 +27,48 @@ app.get('/healthcheck', (req, res) => {
 app.get('/greeting', (req, res) => {
     const time = new Date();
 
-    /* Greeting.count().exec(function (err, count) {
-        console.log({count})
-        var rand = Math.floor(Math.random() * count)
-
-        Greeting.findOne().skip(rand).exec(
-            function (err, result) {
-                console.log({result, rand})
-                res.send(result)
-            }
-        )
-    }) */
-
-    // TODO get a salutation that starts the same date as the server is
     Greeting.count().exec(function (err, count) {
-        var rand = Math.floor(Math.random() * count)
-        var startTime = datefns.startOfDay(time);
-        var endTime = datefns.endOfDay(time)
+        const rand = Math.floor(Math.random() * count)
+        const startTime = datefns.startOfDay(time);
+        const endTime = datefns.endOfDay(time)
+        var morning = false
+        var afternoon = false
+        var evening = false
 
-        var todays_records_count = Greeting.findOne({
+        var todays_records_count = Greeting.find({
             start_date: startTime,
             end_date: endTime,
         }).count()
+
+        var records_for_morning = Greeting.find({
+            clamp_to_morning: true
+        }).count()
+
+        var records_for_afternoon = Greeting.find({
+            clamp_to_afternoon: true
+        }).count()
+
+        var records_for_evening = Greeting.find({
+            clamp_to_evening: true
+        })
+
+        if (datefns.isAfter(time, new Date().setHours(0,0,0,0))
+            && datefns.isBefore(time, new Date().setHours(11, 59, 59, 999))) {
+            console.log("Time is Morning")
+            morning = true
+        }
+
+        if (datefns.isAfter(time, new Date().setHours(12, 0, 0, 0))
+            && datefns.isBefore(time, new Date().setHours(18, 59, 59, 999))) {
+            console.log("Time is afternoon")
+            afternoon = true
+        }
+
+        if (datefns.isAfter(time, new Date().setHours(19, 0, 0, 0))
+            && datefns.isBefore(time, new Date().setHours(23, 59, 59, 999))) {
+            console.log("Time is evening")
+            evening = true
+        }
 
         if (todays_records_count > 0) {
             Greeting.findOne({
@@ -60,6 +80,36 @@ app.get('/greeting', (req, res) => {
                     console.log({result, rand, startTime, endTime})
                     res.send(result)
                 }
+            )
+        } else if (morning && records_for_morning) {
+            Greeting.findOne({
+                clamp_to_morning: true
+            }).skip(rand).exec(
+                function (err, result) {
+                    console.log("Random, clamped to morning only")
+                    console.log({result, rand, startTime, endTime})
+                    res.send(result)
+                } 
+            )
+        } else if (afternoon && records_for_afternoon) {
+            Greeting.findOne({
+                clamp_to_afternoon: true
+            }).skip(rand).exec(
+                function (err, result) {
+                    console.log("Random, clamped to afternoon only")
+                    console.log({result, rand, startTime, endTime})
+                    res.send(result)
+                } 
+            )
+        } else if (evening && records_for_evening) {
+            Greeting.findOne({
+                clamp_to_evening: true
+            }).skip(rand).exec(
+                function (err, result) {
+                    console.log("Random, clamped to afternoon only")
+                    console.log({result, rand, startTime, endTime})
+                    res.send(result)
+                } 
             )
         } else {
             Greeting.findOne({
@@ -73,12 +123,6 @@ app.get('/greeting', (req, res) => {
                 } 
             )
         }
-        /* .skip(rand).exec(
-            function (err, result) {
-                console.log({result, rand, startTime, endTime})
-                res.send(result)
-            }
-        ) */
     })
 
     // TODO add likelihood weighting (optional)
