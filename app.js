@@ -47,14 +47,14 @@ app.get('/greeting/all', async (req, res) => {
 })
 
 app.post('/greeting/create', async (req, res) => {
-    if (!req.body.text) {
+    if (!req.body) {
         res.status(400).send()
     }
 
     const greeting = new Greeting(req.body)
 
     try {
-        await greeting.save()
+        greeting.save()
         res.send(greeting)
     } catch (error) {
         res.status(500).send(error)
