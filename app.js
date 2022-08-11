@@ -30,6 +30,8 @@ app.get('/greeting', (req, res) => {
     var records_for_afternoon = 0;
     var records_for_evening = 0;
     var todays_records_count = 0;
+    const startTime = datefns.startOfDay(time);
+    const endTime = datefns.endOfDay(time)
 
     var todays_records_count = Greeting.find({
         start_date: startTime,
@@ -66,8 +68,6 @@ app.get('/greeting', (req, res) => {
 
     Greeting.count().exec(function (err, count) {
         const rand = Math.floor(Math.random() * count)
-        const startTime = datefns.startOfDay(time);
-        const endTime = datefns.endOfDay(time)
         var morning = false
         var afternoon = false
         var evening = false
