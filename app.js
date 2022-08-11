@@ -19,13 +19,15 @@ app.get('/healthcheck', (req, res) => {
 })
 
 app.get('/greeting', (req, res) => {
-    // TODO Finish get random greeting
+    const time = new Date();
+
     Greeting.count().exec(function (err, count) {
-        var rand = Math.floor.apply(Math.random() * count)
+        console.log({count})
+        var rand = Math.floor(Math.random() * count)
 
         Greeting.findOne().skip(rand).exec(
             function (err, result) {
-                console.log({result})
+                console.log({result, rand})
                 res.send(result)
             }
         )
